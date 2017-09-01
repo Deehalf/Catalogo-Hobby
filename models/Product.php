@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\base\Model;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "{{%tbl_product}}".
@@ -25,15 +27,21 @@ class Product extends \yii\db\ActiveRecord
     }
 
     /**
+     * @var UploadedFile
+     */
+    public $imageFile;
+
+    /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['product_name', 'product_description', 'product_image', 'product_category'], 'required'],
+            [['product_name', 'product_description', 'product_category'], 'required'],
             [['product_description'], 'string'],
-            [['product_featured'], 'integer'],
+            [['product_featured'], 'boolean'],
             [['product_name', 'product_image', 'product_category'], 'string', 'max' => 50],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg'],
         ];
     }
 
@@ -44,13 +52,27 @@ class Product extends \yii\db\ActiveRecord
     {
         return [
             'product_id' => 'Product ID',
-            'product_name' => 'Product Name',
-            'product_description' => 'Product Description',
+            'product_name' => 'Nombre del Producto',
+            'product_description' => 'Descripción del producto',
             'product_image' => 'Product Image',
-            'product_featured' => 'Product Featured',
-            'product_category' => 'Product Category',
+            'product_featured' => '¿Producto destacado?',
+            'product_category' => 'Categoria del producto',
+            'imageFile' => 'Imagen del Producto'
         ];
     }
+
+
+
+    public function upload()
+    {
+        if ($this->validate()) {
+            $this->imageFile->saveAs('images/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     /**
      * @inheritdoc

@@ -18,7 +18,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'product_image')->fileInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'product_featured')->textInput() ?>
+    <?= $form->field($model, 'product_featured')->dropDownList(array('No','Si'),[array(FALSE,TRUE)]) ?>
 
     <?= $form->field($model, 'product_category')->textInput(['maxlength' => true]) ?>
 
